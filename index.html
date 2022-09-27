@@ -1,0 +1,99 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ecommerce Website</title>
+    <script src = "https://code.angularjs.org/snapshot/angular.min.js" ></script>
+    <script src="https://kit.fontawesome.com/01dbf3ee1a.js" crossorigin="anonymous"></script>
+    <link rel="stylesheet" href="index.css">
+</head>
+<body ng-app = "ecommerceApp" ng-controller = "EcommerceController">
+    <div class = "bg-container">
+        <div class = "nav-bar">
+            <div ng-hide = "hideCartItems" ng-click = "showHome()">
+                <i class="fa-solid fa-arrow-left"></i>
+            </div>
+            <h1 class = "nav-bar-heading">Ecommerce Website</h1>
+            <div>
+            <i ng-hide = "cartHide" class="fa-solid fa-filter"></i>
+            <select ng-hide = "cartHide" ng-change = "categoryChanged()" class = "dropdown" ng-model = "selectedCategory">
+                <option value="">All Category</option>
+                <option ng-repeat = "eachItem in categoryList | orderBy:+eachItem">{{eachItem}}</option>
+            </select>
+
+            <select ng-hide = "cartHide" ng-change = "priceChanged()" class = "dropdown" ng-model = "selectedPrice">
+                <option value="">All Price</option>
+                <option ng-repeat = "eachItem in priceList">{{eachItem}}</option>
+            </select>
+
+            <input ng-hide = "cartHide" class = "search" type="search" ng-model = "search" placeholder="Search">
+            </div>
+            
+            
+            
+            <button ng-click = "cartClicked()" ng-hide = "cartHide" class = "cart-button"><span class = "cart-count">&nbsp{{cartCount}}&nbsp</span><i class="fa-solid fa-cart-shopping"></i>&nbsp;Cart</button>    
+        </div>
+        
+    
+    
+    <div ng-hide = "hideProductsItem" class = "products-div">
+        <display-noitem></display-noitem>
+        <div>
+            <button class = "page-button" ng-click="previousPage()" ng-hide="disablePreviousButton"  ng-click = "goNextPage()" >Previous</button>
+            <button class = "page-button" ng-click="nextPage()" ng-hide="disableNextButton" ng-click = "goPreviousPage()" >Next</button>
+        </div>
+        <ul class = "products-list">
+            <li class = "each-product-list" ng-repeat = "eachItem in products1 | filter : search |limitTo:50:limitToBegin  " >
+                <div class = "product-image">
+                    <img class = "image" ng-src = {{eachItem.image}}  />
+                </div>
+                <div class = "product-description-div">
+                    <p  class = "product-description">{{eachItem.name}}</p>
+                    <p>{{eachItem.salePrice | currency}} </p>
+                    <button ng-hide = "eachItem.isInCart" class = "add-to-cart-button" ng-click = "addToCart(eachItem,eachItem.objectID)"><i class="fa-solid fa-cart-shopping"></i> Add to Cart</button>
+                    <button ng-show = "eachItem.isInCart" class = "add-to-cart-button" ng-click = "removeFromCart(eachItem.objectID)"><i class="fa-solid fa-cart-shopping"></i> Remove From Cart</button>
+                </div>
+            </li>
+        </ul>
+        <div>
+            <button class = "page-button" ng-click="previousPage()" ng-hide="disablePreviousButton"  ng-click = "goNextPage()" >Previous</button>
+            <button class = "page-button" ng-click="nextPage()" ng-hide="disableNextButton" ng-click = "goPreviousPage()" >Next</button>
+        </div>
+        
+    </div>
+
+    <div ng-hide = "hideCartItems" class = "products-div">
+        <h1 ng-if = "cartArray.length === 0">Cart is Empty :(</h1>
+        <h1 ng-if = "cartArray.length > 0">You have some items in your Cart</h1>
+        <ul class = "products-list">
+            <li class = "each-product-list" ng-repeat = "eachItem in cartArray |limitTo:50:limitToBeginCart  " >
+                <div class = "product-image">
+                    <img class = "image" ng-src = {{eachItem.image}}  />
+                </div>
+                <div class = "product-description-div">
+                    <p  class = "product-description">{{eachItem.name}}</p>
+                    <div class = "quantity-div">
+                        <button class = "quantity-button" ng-click = "decreaseQuantity(eachItem)">-</button>
+                        <p>{{eachItem.quantity}}</p>
+                        
+                        <button class = "quantity-button" ng-click = "increaseQuantity(eachItem)">+</button>
+                    </div>
+                    <p>{{eachItem.quantity * eachItem.salePrice | currency : "$" : 2 }}</p>
+                    <button class = "add-to-cart-button" ng-click = "removeFromActualCart(eachItem.objectID)"><i class="fa-solid fa-cart-shopping"></i> Remove From Cart</button>
+                </div>
+            </li>
+        </ul>
+        <p ng-hide = "totalAmountAndButton">Total Amount: {{totalAmount | currency : "$" : 2}}</p>
+        <button ng-hide = "totalAmountAndButton" ng-click = "checkoutClicked()" class = "checkout-button"  type = "button">Checkout</button>
+    </div>
+        
+
+    </div>
+    <script src = "app.js" ></script>
+    <script src = "main.controller.js" ></script>
+    <script src = "main.directive.js" ></script>
+</body>
+</html>
